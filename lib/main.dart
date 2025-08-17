@@ -4,6 +4,7 @@ import 'package:tourism_app_flutter/screen/home/home_screen.dart';
 import 'package:tourism_app_flutter/static/NavigationRoute.dart';
 
 import 'model/tourism.dart';
+import 'style/theme/tourism_theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,11 +17,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
-      ),
+      title: 'Tourism App',
+      theme: TourismTheme.lightTheme,
+      darkTheme: TourismTheme.darkTheme,
+      themeMode: ThemeMode.system,
       initialRoute: NavigationRoute.homeRoute.name,
       routes: {
         NavigationRoute.homeRoute.name: (context) => const HomeScreen(),
