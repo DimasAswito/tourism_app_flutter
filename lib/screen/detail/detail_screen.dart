@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tourism_app_flutter/model/tourism.dart';
 import 'package:tourism_app_flutter/screen/bookmark/bookmark_icon_widget.dart';
+
+import '../../provider/detail/bookmark_icon_provider.dart';
 
 class DetailScreen extends StatelessWidget {
   final Tourism tourism;
@@ -16,7 +19,10 @@ class DetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Tourism Detail"),
         actions: [
-          BookmarkIconWidget(tourism: tourism),
+          ChangeNotifierProvider(
+            create: (context) => BookmarkIconProvider(),
+            child: BookmarkIconWidget(tourism: tourism),
+          ),
         ],
       ),
       body: SingleChildScrollView(
