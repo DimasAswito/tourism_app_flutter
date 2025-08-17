@@ -7,7 +7,7 @@ import 'package:tourism_app_flutter/screen/home/home_screen.dart';
 import 'package:tourism_app_flutter/screen/main/main_screen.dart';
 import 'package:tourism_app_flutter/static/NavigationRoute.dart';
 
-import 'model/tourism.dart';
+import 'package:tourism_app_flutter/data/model/tourism.dart';
 import 'style/theme/tourism_theme.dart';
 
 void main() {
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
       routes: {
         NavigationRoute.mainRoute.name: (context) => const MainScreen(),
         NavigationRoute.detailRoute.name: (context) => DetailScreen(
-          tourism: ModalRoute.of(context)?.settings.arguments as Tourism,
+          tourismId: ModalRoute.of(context)?.settings.arguments as int,
         ),
       },
     );

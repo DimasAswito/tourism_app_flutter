@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tourism_app_flutter/model/tourism.dart';
+import 'package:tourism_app_flutter/data/model/tourism.dart';
 
 import '../../provider/detail/bookmark_icon_provider.dart';
 import '../../provider/detail/bookmark_list_provider.dart';
