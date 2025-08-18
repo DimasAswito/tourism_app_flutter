@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:provider/provider.dart';
 import 'package:tourism_app_flutter/data/api/api_service.dart';
 import 'package:tourism_app_flutter/data/model/tourism.dart';
 import 'package:tourism_app_flutter/data/model/tourism_list_response.dart';
+import 'package:tourism_app_flutter/provider/home/tourism_list_provider.dart';
 import 'package:tourism_app_flutter/screen/home/tourism_card_widget.dart';
 import 'package:tourism_app_flutter/static/NavigationRoute.dart';
+import 'package:tourism_app_flutter/static/tourism_list_result_state.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -16,12 +20,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late Future<TourismListResponse> _futureTourismResponse;
 
   @override
   void initState() {
     super.initState();
-    _futureTourismResponse = ApiServices().getTourismList();
+
+    Future.microtask(() {
+      context.read<TourismListProvider>().fetchTourismList();
+    });
   }
 
   @override
@@ -30,43 +36,34 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text("Tourism List"),
       ),
-      body: FutureBuilder(
-        future: _futureTourismResponse,
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            case ConnectionState.done:
-              if (snapshot.hasError) {
-                return Center(
-                  child: Text(snapshot.error.toString()),
+      body: Consumer<TourismListProvider>(
+        builder: (context, value, child) {
+          return switch (value.resultState) {
+            TourismListLoadingState() => const Center(
+              child: CircularProgressIndicator(),
+            ),
+            TourismListLoadedState(data: var tourismList) => ListView.builder(
+              itemCount: tourismList.length,
+              itemBuilder: (context, index) {
+                final tourism = tourismList[index];
+
+                return TourismCard(
+                  tourism: tourism,
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      NavigationRoute.detailRoute.name,
+                      arguments: tourism.id,
+                    );
+                  },
                 );
-              }
-
-              final listOfTourism = snapshot.data!.places;
-              return ListView.builder(
-                itemCount: listOfTourism.length,
-                itemBuilder: (context, index) {
-                  final tourism = listOfTourism[index];
-
-
-                  return TourismCard(
-                    tourism: tourism,
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        NavigationRoute.detailRoute.name,
-                        arguments: tourism.id,
-                      );
-                    },
-                  );
-                },
-              );
-            default:
-              return const SizedBox();
-          }
+              },
+            ),
+            TourismListErrorState(error: var message) => Center(
+              child: Text(message),
+            ),
+            _ => const SizedBox(),
+          };
         },
       ),
 

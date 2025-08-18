@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tourism_app_flutter/provider/detail/bookmark_list_provider.dart';
+import 'package:tourism_app_flutter/provider/detail/tourism_detail_provider.dart';
+import 'package:tourism_app_flutter/provider/home/tourism_list_provider.dart';
 import 'package:tourism_app_flutter/provider/main/index_nav_provider.dart';
 import 'package:tourism_app_flutter/screen/detail/detail_screen.dart';
 import 'package:tourism_app_flutter/screen/home/home_screen.dart';
@@ -8,6 +10,7 @@ import 'package:tourism_app_flutter/screen/main/main_screen.dart';
 import 'package:tourism_app_flutter/static/NavigationRoute.dart';
 
 import 'package:tourism_app_flutter/data/model/tourism.dart';
+import 'data/api/api_service.dart';
 import 'style/theme/tourism_theme.dart';
 
 void main() {
@@ -19,6 +22,19 @@ void main() {
         ),
         ChangeNotifierProvider(
           create: (context) => BookmarkListProvider(),
+        ),
+        Provider(
+          create: (context) => ApiServices(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => TourismListProvider(
+            context.read<ApiServices>(),
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => TourismDetailProvider(
+            context.read<ApiServices>(),
+          ),
         ),
       ],
       child: const MyApp(),
